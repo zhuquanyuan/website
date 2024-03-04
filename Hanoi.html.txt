@@ -1,0 +1,17 @@
+<html>
+<script>
+function(n,source,target,temp)
+ {   
+        if (n==1)
+        {
+             document.weiteln('Move'+source+'to'+target+'<br>');
+         }
+       else
+       {
+           move(n-1,source,temp,target);
+           move(1,source,target,temp);
+           move(n-1,temp,target,source);
+       }
+}
+</script>
+</html>
