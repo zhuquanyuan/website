@@ -1,0 +1,18 @@
+table tr td
+{
+   color:orange;
+   font-family:Comic Sans MS,cursive,sans-serif;
+   font-size:22px;
+   font-weight:700;
+   opacity:0.5;
+   text-shadow:2px 2px #34afea
+}
+
+input
+{
+   color:#000000;
+font-family:Arial Black,Gadget,sans-serif;
+font-size:24px;
+font-weight:676;
+padding:3px 3px 3px 3pxt；
+}
