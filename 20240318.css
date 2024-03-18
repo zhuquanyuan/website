@@ -1,0 +1,31 @@
+
+#egg
+{
+   background-color:red;
+   border-radius:100px;
+   -webkit-border-radius:100px;
+   -moz-border-radius:100px;
+   height:200px;
+   width:200px
+}
+
+div.ellipse
+{
+   background-color:orange;
+   border-radius:200px / 150px;
+   -webkit-border-radius:200px / 150px;
+   -moz-border-radius:200px / 150px;
+   height:300px;
+   width:400px
+}
+
+div.triangle
+{
+   border:50px solid transparent;
+   border-top-style:solid;
+   border-top-width:1px;
+   border-top-color:red;
+   border-bottom-color:#ff6b6b;
+   height:0px;
+   width:0px
+}
