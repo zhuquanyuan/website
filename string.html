@@ -1,0 +1,15 @@
+<html><body>&uarr;&darr;arrows</body>
+<script>
+document.write(document.body.innerHTML.charAt(0)=='&uarr;');
+document.write('<BR>');
+document.write(document.body.innerHTML.charCodeAt(0)=='8593');
+document.write('<BR>');
+document.write(document.body.innerHTML.charCodeAt(1));
+
+let x="0123456789abcdefghijklmnopqrstuvwsyz~`!@#$%^&*()_-+={}[]:;\"'|\<>?,>/";
+for(let i=0;i<x.length;i++)
+document.write(x.charAt(i)+" coded as"+x.charCodeAt(i)+'<br>');
+
+//document.write(String.charFromCode(97));
+</script>
+</html>
