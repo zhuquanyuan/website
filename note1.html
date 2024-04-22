@@ -1,0 +1,47 @@
+<script>
+     let a=[]
+     let associative = {id:"D10045554",name:"John"};
+     let y= {"id":"D10045554","name":"John"};
+     let z= {id:"D10045554","Last name":"John"};
+     let w={"John Smith":2323434,"Scott Cave":34322122};
+     
+     //增
+     w["Johnson"]=23543221;
+    //取
+     document.write(w["John Smith"]+ "<br>");
+    //遍
+     for(let key in w)
+         document.write("key="+key+"value="+w[key]+"<br>");
+    // for(let v of w)document.write(value="+v+"<br>");
+     //字典不能在值中遍历，数组可以在值中遍历
+     //查
+     for(let key in w)
+          if(w[key] == 34322122)
+               document.write(key + "has 34322122"+ "<br>");
+//数
+     document.write("size of w = " + w.lengh + "<br>");
+//调用:需要在函数名前加namespace(家族名称)
+
+     var Game = {
+      x:1,
+      y:2,
+      move:function(u,v){document.write(Game.x + ","+Game.y+ "<br>");}
+}
+
+Game.move(1,2);
+
+Game.move = function(u,v){}
+
+
+//setTimeout(functionname,2000);//2000ms=2s//scheduled task
+//setTimeout(function(){...},1500);
+//setTimeout("Grame.move("+ x + ","+ y +")",2333);
+//var ab=[3,4,5,2,1];
+//document.write(a[i]);
+
+//clearTimeout(h);
+
+
+//let handle = setlnterval(function(){},2000);
+//clearlnterval(handle)
+</script>
