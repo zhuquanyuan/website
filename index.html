@@ -1,0 +1,140 @@
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+    #column1,
+    #column2,
+    #column3 {
+      width: 20px;
+      height: 480px;
+      background-color: black;
+      position: absolute;
+    }
+
+    #column1 {
+      left: 110px;
+      top:30px;
+    }
+
+    #column2 {
+      left: 585px;
+      top:30px;
+    }
+
+    #column3 {
+      left: 1123px;
+      top:30px;
+    }
+  </style>
+
+        
+    </head>
+    <body>
+       
+
+  <div id="column1"></div>
+  <div id="column2"></div>
+  <div id="column3"></div>
+
+         <style>
+            /*@keyframes showup
+            {
+                0%{display:none}
+                100%{display:block}
+            }*/
+            .cls1{color:purple}
+           .layer{position: absolute;
+           /*background-image: linear-gradient(0deg,yellow,orange);*/       
+           background-color: orange;
+           border-radius: 5px;
+           /*margin:3px;
+           animation-name: showup;
+           animation-iteration-count: 1;
+           animation-duration:1s;*/
+           }
+        </style>    
+        <style id = dynamic>
+        @keyframes diskmove{
+            0%{left:100px;top:200px}
+           // 50%{left:P;top:0px}
+            100%{left:400px;top:500px}
+            }
+            </style>
+    </head>
+    <body>
+Number of Disks to play<select id =numdisks></select>
+<input id =startbtn type=button onclick=startgame() class=button1 value=Start
+onmouseenter="showhint('Start the game','Start')" onmouseout=hidehint('Start')>
+
+<input id =pausebtn type=button onclick=startgame() class=button1 value=Pause>
+<input id =resumebtn type=button onclick=startgame() class=button1 value=Resume>
+Period  Time<select id=period></select>
+<script>
+let  s=document.getElementById('numdisks');
+for(let n=0;n<10;n++)
+    s.options[n]=new Option(3+n,3+n);
+ s=document.getElementById('period');
+for(let n=0;n<5;n++)
+    s.options[n]=new Option(0.5*(n+1),0.5*(n+1));
+var handle;
+var orderOflnstruction = 0;
+function startgame()
+{
+     let  s=document.getElementByld('numdisks');
+     N = s.options[s.selectedIndex].value;
+     tower(N);
+     move();
+     movedish(0);
+}
+
+function pausegame()
+{
+     clearTimeout(handle);
+}
+
+function resumegame()
+{
+     movedish(orderOflnstruction);
+}
+function showhint(hint,btnvalue)
+{
+     let  dv=document.createElement('div');
+     dv.id=btnvalue;
+     dv.style.cssText='position:absolute;left:200px;top:300px;background-olor:yellow;color:purple;border-radius:4px;box-shadow:2px -2px #676787';
+     dv.innerHTML = hint;
+     document.body.appendChild(dv);
+}
+function hidehint(btnvalue)
+{
+    let dv = document.getElementById(btnvalue);
+    dv.parentNode.removeChild(dv);
+}
+let time;
+window.onblur = function()
+{
+    time = (new Date()).getTime();  console.log(time);
+}
+window.onfocus = function(){
+     let time1 = (new Date()).getTime();
+     let diff = time1-time;
+    // showhint('You have left for' + diff + 'milliseconds','time');
+     setTimeout("hidehint('time')",7000);
+}
+
+  
+
+</script>  
+<script src="js/Drag.js"></script>
+<script src="js/hanoi.js"></script>
+
+
+<!--div>
+<div style="background-color:orange;width:200px;height:60px;border-radius:100px/30px;z-index:1"></div>
+<div style="position:relative;top:-30px;background-color:orange;width:200px;height:20px;z-index:2"></div>
+<div style="position:relative;top:-60px;background-color:yellow;width:200px;height:60px;border-radius:100px/30px;border:1px red solid;z-index:3"></div>
+</div-->
+</body>
+</html>
+
