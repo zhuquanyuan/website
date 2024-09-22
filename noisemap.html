@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>宁波市噪音地图</title>
+    <style>
+      #container {
+        width: 1400px;
+        height: 700px;
+        border: 1px solid gray;
+      }
+
+      .menu {
+        background-color: #f5f5f5;
+        padding: 10px;
+      }
+    </style>
+    <script src="http://api.map.baidu.com/api?v=1.3"></script>
+  </head>
+
+  <body>
+    <div id="container"></div>
+    <div class="menu">
+      <h3>噪音数据</h3>
+      <p>江北区：平均噪音数据:68.772DB、最高噪音数据:81.402DB、最低噪音数据:61.001DB</p>
+      <p>海曙区：平均噪音数据:64.3316DB、最高噪音数据76.5662DB、最低噪音数据:56.8961DB</p>
+      <p>镇海区：平均噪音数据:65.379DB、最高噪音数据:81.011DB、最低噪音数据:59.527DB</p>
+      <p>鄞州区：平均噪音数据:66.808DB、最高噪音数据:77.015DB、最低噪音数据:62.103DB</p>
+    </div>
+
+    <script>
+      // 百度地图初始化
+      var map = new BMap.Map("container");
+      var point = new BMap.Point(121.56, 29.86); // 经纬度坐标
+      map.centerAndZoom(point, 12); // 初始化地图,设置中心点坐标和地图级别。
+      map.addControl(new BMap.NavigationControl());
+      map.enableScrollWheelZoom(true); // 启用滚轮放大缩小。
+
+      // 噪音数据点
+      // const noiseData = [
+      //   // 海曙区居民区数据
+      //   { name: '后河小区', lat: 29.8842112, lng: 121.537598, minNoise: 55.7, maxNoise: 62.7, avgNoise: 58.87 },
+      //   { name: '龙柏花园', lat: 29.889291, lng: 121.540167, minNoise: 58.5, maxNoise: 73.6, avgNoise: 65.98 },
+      //   { name: '天一豪景', lat: 29.877854, lng: 121.559616, minNoise: 50.3, maxNoise: 73.4, avgNoise: 61.87 },
+      //   { name: '华楼街', lat: 29.877868, lng: 121.557332, minNoise: 50.8, maxNoise: 71, avgNoise: 61.13 },
+
+      //   // 江北区居民区数据
+      //   { name: '轨交万科湛蓝晓月', lat: 29.958512, lng: 121.447964, minNoise: 60.1, maxNoise: 74.8, avgNoise: 65.62 },
+      //   { name: '凯德汇豪天下', lat: 29.890258, lng: 121.561512, minNoise: 48.9, maxNoise: 60.9, avgNoise: 55.78 },
+      //   { name: '怡江小区', lat: 29.907696, lng: 121.604847, minNoise: 50.4, maxNoise: 72.9, avgNoise: 60.55 },
+      //   { name: '外滩花园', lat: 29.888822, lng: 121.568515, minNoise: 53.4, maxNoise: 76.5, avgNoise: 64.95 },
+
+      //   // 鄞州区居民区数据
+      //   { name: '绿城皇冠花园', lat: 29.891805, lng: 121.634143, minNoise: 51.8, maxNoise: 53.1, avgNoise: 52.5 },
+      //   { name: '盛世天城', lat: 29.828154, lng: 121.577704, minNoise: 58.9, maxNoise: 68.2, avgNoise: 63.6 },
+      //   { name: '和美城', lat: 29.882156, lng: 121.628653, minNoise: 51.2, maxNoise: 67.8, avgNoise: 56.4 },
+      //   { name: '保利海晏天珺', lat: 29.883206, lng: 121.625932, minNoise: 52.7, maxNoise: 58.5, avgNoise: 55.6 },
+      //   { name: '三里江印', lat: 29.872948, lng: 121.577611, minNoise: 63.2, maxNoise: 81.6, avgNoise: 75.6 },
+
+      //   // 镇海区居民区数据
+      //   { name: '胜利东弄', lat: 29.954578, lng: 121.726019, minNoise: 68.6, maxNoise: 73.9, avgNoise: 62.55 },
+      //   { name: '怡北街', lat: 29.908502, lng: 121.602736, minNoise: 50.4, maxNoise: 67.5, avgNoise: 50.9 },
+      //   { name: '联兴花园', lat: 29.925504, lng: 121.619237, minNoise: 50.5, maxNoise: 68.3, avgNoise: 58.87 },
+      //   { name: '清泉花园', lat: 29.923791, lng: 121.621658, minNoise: 56.2, maxNoise: 61.8, avgNoise: 59 },
+
+      //   // 海曙区工业区数据
+      //   { name: '望春工业区', lat: 29.841945, lng: 121.463654, minNoise: 61.5, maxNoise: 77.6, avgNoise: 66.3 },
+      //   { name: '享裕工业园区', lat: 29.825802, lng: 121.486057, minNoise: 33.6, maxNoise: 96.1, avgNoise: 60.6 },
+      //   { name: '海联工业园区', lat: 29.847475, lng: 121.508384, minNoise: 65.5, maxNoise: 80.6, avgNoise: 76.5 },
+
+      //   // 江北区工业区数据
+      //   { name: '浙江前洋经济开发区宁波电商经济创新', lat: 29.951846, lng: 121.471953, minNoise: 64.5, maxNoise: 95.4, avgNoise: 68.7 },
+      //   { name: '得力集团宁波工业园', lat: 29.952886, lng: 121.478096, minNoise: 60.9, maxNoise: 84.3, avgNoise: 71.3 },
+      //   { name: '宁波峰梅工业园（江北）', lat: 29.946722, lng: 121.498561, minNoise: 54, maxNoise: 89.5, avgNoise: 73.5 },
+      //   { name: '甬江工业园', lat: 29.934426, lng: 121.606787, minNoise: 68, maxNoise: 84, avgNoise: 78 },
+
+      //   // 鄞州区工业区数据
+      //   { name: '韵升科技工业园', lat: 29.885831, lng: 121.614587, minNoise: 58.9, maxNoise: 76.8, avgNoise: 61 },
+      //   { name: '陶公村工业园', lat: 29.811713, lng: 121.638838, minNoise: 60.5, maxNoise: 80.1, avgNoise: 65.4 },
+      //   { name: '宁波鄞州工业园区', lat: 29.776512, lng: 121.517662, minNoise: 69, maxNoise: 91, avgNoise: 71 },
+      //   { name: '五乡工业园区', lat: 29.856862, lng: 121.685543, minNoise: 70, maxNoise: 88, avgNoise: 74 },
+
+      //   // 镇海区工业区数据
+      //   { name: '骆驼工业区', lat: 29.982676, lng: 121.588109, minNoise: 64.2, maxNoise: 85, avgNoise: 65.8 },
+      //   { name: '北欧工业园', lat: 29.931249, lng: 121.665234, minNoise: 59.3, maxNoise: 86.8, avgNoise: 66.4 },
+      //   { name: '镇海蛟川工业区', lat: 29.996976, lng: 121.657740, minNoise: 59.1, maxNoise: 85.9, avgNoise: 64.8 },
+      //   { name: '化工工业区', lat: 30.059286, lng: 121.622778, minNoise: 57, maxNoise: 95.7, avgNoise: 58.7 },
+      //   { name: '石化经济工业区', lat: 30.046348, lng: 121.619401, minNoise: 55, maxNoise: 93.1, avgNoise: 66.9 }
+      // ];
+
+      // 海曙区居民区数据
+      const haishuResidentialData = [
+        {
+          name: "后河小区",
+          lat: 29.8842112,
+          lng: 121.537598,
+          minNoise: 55.7,
+          maxNoise: 62.7,
+          avgNoise: 58.87,
+          type: "居民区",
+        },
+        {
+          name: "龙柏花园",
+          lat: 29.889291,
+          lng: 121.540167,
+          minNoise: 58.5,
+          maxNoise: 73.6,
+          avgNoise: 65.98,
+          type: "居民区",
+        },
+        {
+          name: "天一豪景",
+          lat: 29.877854,
+          lng: 121.559616,
+          minNoise: 50.3,
+          maxNoise: 73.4,
+          avgNoise: 61.87,
+          type: "居民区",
+        },
+        {
+          name: "华楼街",
+          lat: 29.877868,
+          lng: 121.557332,
+          minNoise: 50.8,
+          maxNoise: 71,
+          avgNoise: 61.13,
+          type: "居民区",
+        },
+      ];
+
+      // 江北区居民区数据
+      const jiangbeiResidentialData = [
+        {
+          name: "轨交万科湛蓝晓月",
+          lat: 29.958512,
+          lng: 121.447964,
+          minNoise: 60.1,
+          maxNoise: 74.8,
+          avgNoise: 65.62,
+          type: "居民区",
+        },
+        {
+          name: "凯德汇豪天下",
+          lat: 29.890258,
+          lng: 121.561512,
+          minNoise: 48.9,
+          maxNoise: 60.9,
+          avgNoise: 55.78,
+          type: "居民区",
+        },
+        {
+          name: "怡江小区",
+          lat: 29.907696,
+          lng: 121.604847,
+          minNoise: 50.4,
+          maxNoise: 72.9,
+          avgNoise: 60.55,
+          type: "居民区",
+        },
+        {
+          name: "外滩花园",
+          lat: 29.888822,
+          lng: 121.568515,
+          minNoise: 53.4,
+          maxNoise: 76.5,
+          avgNoise: 64.95,
+          type: "居民区",
+        },
+        {
+          name: "同方杰座",
+          lat: 29.887016,
+          lng: 121.567728,
+          minNoise: 56.6,
+          maxNoise: 60.2,
+          avgNoise: 58.4,
+          type: "居民区",
+        },
+      ];
+
+      // 鄞州区居民区数据
+      const yinzhouResidentialData = [
+        {
+          name: "绿城皇冠花园",
+          lat: 29.891805,
+          lng: 121.634143,
+          minNoise: 51.8,
+          maxNoise: 53.1,
+          avgNoise: 52.5,
+          type: "居民区",
+        },
+        {
+          name: "盛世天城",
+          lat: 29.828154,
+          lng: 121.577704,
+          minNoise: 58.9,
+          maxNoise: 68.2,
+          avgNoise: 63.6,
+          type: "居民区",
+        },
+        {
+          name: "和美城",
+          lat: 29.882156,
+          lng: 121.628653,
+          minNoise: 51.2,
+          maxNoise: 67.8,
+          avgNoise: 56.4,
+          type: "居民区",
+        },
+        {
+          name: "保利海晏天珺",
+          lat: 29.883206,
+          lng: 121.625932,
+          minNoise: 52.7,
+          maxNoise: 58.5,
+          avgNoise: 55.6,
+          type: "居民区",
+        },
+        {
+          name: "三里江印",
+          lat: 29.872948,
+          lng: 121.577611,
+          minNoise: 63.2,
+          maxNoise: 81.6,
+          avgNoise: 75.6,
+          type: "居民区",
+        },
+      ];
+
+      // 镇海区居民区数据
+      const zhenhaiResidentialData = [
+        {
+          name: "胜利东弄",
+          lat: 29.954578,
+          lng: 121.726019,
+          minNoise: 68.6,
+          maxNoise: 73.9,
+          avgNoise: 62.55,
+          type: "居民区",
+        },
+        {
+          name: "怡北街",
+          lat: 29.908502,
+          lng: 121.602736,
+          minNoise: 50.4,
+          maxNoise: 67.5,
+          avgNoise: 50.9,
+          type: "居民区",
+        },
+        {
+          name: "联兴花园",
+          lat: 29.925504,
+          lng: 121.619237,
+          minNoise: 50.5,
+          maxNoise: 68.3,
+          avgNoise: 58.87,
+          type: "居民区",
+        },
+        {
+          name: "清泉花园",
+          lat: 29.923791,
+          lng: 121.621658,
+          minNoise: 56.2,
+          maxNoise: 61.8,
+          avgNoise: 59,
+          type: "居民区",
+        },
+      ];
+
+      // 海曙区工业区数据
+      const haishuIndustrialData = [
+        {
+          name: "望春工业区",
+          lat: 29.841945,
+          lng: 121.463654,
+          minNoise: 61.5,
+          maxNoise: 77.6,
+          avgNoise: 66.3,
+          type: "工业区",
+        },
+        {
+          name: "享裕工业园区",
+          lat: 29.825802,
+          lng: 121.486057,
+          minNoise: 33.6,
+          maxNoise: 96.1,
+          avgNoise: 60.6,
+          type: "工业区",
+        },
+        {
+          name: "海联工业园区",
+          lat: 29.847475,
+          lng: 121.508384,
+          minNoise: 65.5,
+          maxNoise: 80.6,
+          avgNoise: 76.5,
+          type: "工业区",
+        },
+      ];
+
+      // 江北区工业区数据
+      const jiangbeiIndustrialData = [
+        {
+          name: "浙江前洋经济开发区宁波电商经济创新",
+          lat: 29.951846,
+          lng: 121.471953,
+          minNoise: 64.5,
+          maxNoise: 95.4,
+          avgNoise: 68.7,
+          type: "工业区",
+        },
+        {
+          name: "得力集团宁波工业园",
+          lat: 29.952886,
+          lng: 121.478096,
+          minNoise: 60.9,
+          maxNoise: 84.3,
+          avgNoise: 71.3,
+          type: "工业区",
+        },
+        {
+          name: "宁波峰梅工业园（江北）",
+          lat: 29.946722,
+          lng: 121.498561,
+          minNoise: 54,
+          maxNoise: 89.5,
+          avgNoise: 73.5,
+          type: "工业区",
+        },
+        {
+          name: "甬江工业园",
+          lat: 29.934426,
+          lng: 121.606787,
+          minNoise: 68,
+          maxNoise: 84,
+          avgNoise: 78,
+          type: "工业区",
+        },
+      ];
+
+      // 鄞州区工业区数据
+      const yinzhouIndustrialData = [
+        {
+          name: "韵升科技工业园",
+          lat: 29.885831,
+          lng: 121.614587,
+          minNoise: 58.9,
+          maxNoise: 76.8,
+          avgNoise: 61,
+          type: "工业区",
+        },
+        {
+          name: "陶公村工业园",
+          lat: 29.811713,
+          lng: 121.638838,
+          minNoise: 60.5,
+          maxNoise: 80.1,
+          avgNoise: 65.4,
+          type: "工业区",
+        },
+        {
+          name: "宁波鄞州工业园区",
+          lat: 29.776512,
+          lng: 121.517662,
+          minNoise: 69,
+          maxNoise: 91,
+          avgNoise: 71,
+          type: "工业区",
+        },
+        {
+          name: "五乡工业园区",
+          lat: 29.856862,
+          lng: 121.685543,
+          minNoise: 70,
+          maxNoise: 88,
+          avgNoise: 74,
+          type: "工业区",
+        },
+      ];
+
+      // 镇海区工业区数据
+      const zhenhaiIndustrialData = [
+        {
+          name: "骆驼工业区",
+          lat: 29.982676,
+          lng: 121.588109,
+          minNoise: 64.2,
+          maxNoise: 85,
+          avgNoise: 65.8,
+          type: "工业区",
+        },
+        {
+          name: "北欧工业园",
+          lat: 29.931249,
+          lng: 121.665234,
+          minNoise: 59.3,
+          maxNoise: 86.8,
+          avgNoise: 66.4,
+          type: "工业区",
+        },
+        {
+          name: "镇海蛟川工业区",
+          lat: 29.996976,
+          lng: 121.65774,
+          minNoise: 59.1,
+          maxNoise: 85.9,
+          avgNoise: 64.8,
+          type: "工业区",
+        },
+        {
+          name: "化工工业区",
+          lat: 30.059286,
+          lng: 121.622778,
+          minNoise: 57,
+          maxNoise: 95.7,
+          avgNoise: 58.7,
+          type: "工业区",
+        },
+        {
+          name: "石化经济工业区",
+          lat: 30.046348,
+          lng: 121.619401,
+          minNoise: 55,
+          maxNoise: 93.1,
+          avgNoise: 66.9,
+          type: "工业区",
+        },
+      ];
+      // 海曙区商业区数据
+      const haishuCommercialData = [
+        {
+          name: "天一银泰",
+          lat: 29.877203,
+          lng: 121.561851,
+          minNoise: 57.7,
+          maxNoise: 70.5,
+          avgNoise: 63,
+          type: "商业区",
+        },
+        {
+          name: "天一广场",
+          lat: 29.875832,
+          lng: 121.560475,
+          minNoise: 52.6,
+          maxNoise: 78.5,
+          avgNoise: 63.7,
+          type: "商业区",
+        },
+        {
+          name: "亚细亚",
+          lat: 29.873531,
+          lng: 121.558031,
+          minNoise: 53.8,
+          maxNoise: 77.2,
+          avgNoise: 64.5,
+          type: "商业区",
+        },
+        {
+          name: "和义大道购物中心",
+          lat: 29.87935,
+          lng: 121.561928,
+          minNoise: 50.9,
+          maxNoise: 74.1,
+          avgNoise: 58.1,
+          type: "商业区",
+        },
+        {
+          name: "鼓楼",
+          lat: 29.879939,
+          lng: 121.55294,
+          minNoise: 58.3,
+          maxNoise: 79.9,
+          avgNoise: 69.1,
+          type: "商业区",
+        },
+        {
+          name: "银亿时代广场",
+          lat: 29.869881,
+          lng: 121.555182,
+          minNoise: 51.5,
+          maxNoise: 66.8,
+          avgNoise: 63.06,
+          type: "商业区",
+        },
+      ];
+
+      // 江北区商业区数据
+      const jiangbeiCommercialData = [
+        {
+          name: "万达广场",
+          lat: 29.921925,
+          lng: 121.537064,
+          minNoise: 63.1,
+          maxNoise: 87,
+          avgNoise: 72.9,
+          type: "商业区",
+        },
+        {
+          name: "老外滩",
+          lat: 29.885762,
+          lng: 121.568571,
+          minNoise: 57.5,
+          maxNoise: 69.8,
+          avgNoise: 64.3,
+          type: "商业区",
+        },
+      ];
+
+      // 鄞州区商业区数据
+      const yinzhouCommercialData = [
+        {
+          name: "龙湖天街",
+          lat: 29.885853,
+          lng: 121.597413,
+          minNoise: 60.1,
+          maxNoise: 88.2,
+          avgNoise: 73,
+          type: "商业区",
+        },
+        {
+          name: "文化广场",
+          lat: 29.821271,
+          lng: 121.55346,
+          minNoise: 52.3,
+          maxNoise: 67.4,
+          avgNoise: 59.1,
+          type: "商业区",
+        },
+        {
+          name: "环球银泰城",
+          lat: 29.804092,
+          lng: 121.552631,
+          minNoise: 66.6,
+          maxNoise: 82.7,
+          avgNoise: 73.1,
+          type: "商业区",
+        },
+      ];
+      // 镇海区商业区数据
+      const zhenhaiCommercialData = [
+        {
+          name: "吾悦广场",
+          lat: 29.955077,
+          lng: 121.606668,
+          minNoise: 72.3,
+          maxNoise: 88.3,
+          avgNoise: 80.3,
+          type: "商业区",
+        },
+        {
+          name: "开元广场",
+          lat: 29.929439,
+          lng: 121.630873,
+          minNoise: 50,
+          maxNoise: 70.9,
+          avgNoise: 60.45,
+          type: "商业区",
+        },
+      ];
+
+      // 自定义标记图标
+      function createCustomIcon(color) {
+        var icon = new BMap.Icon(
+          "data:image/svg+xml;base64," +
+            btoa(`
+        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10">
+          <rect width="10" height="10" style="fill:${color};" />
+        </svg>`),
+          new BMap.Size(10, 10)
+        );
+        return icon;
+      }
+
+      // 添加标记
+      function addMarker(data, color, type) {
+        data.forEach((item) => {
+          const marker = new BMap.Marker(new BMap.Point(item.lng, item.lat), { icon: createCustomIcon(color) });
+          map.addOverlay(marker);
+          var infoWindow = new BMap.InfoWindow(`${item.name}<br>类型：${type}<br>最低噪音：${item.minNoise}dB<br>最高噪音：${item.maxNoise}dB<br>平均噪音：${item.avgNoise}dB`);
+          marker.addEventListener("click", function () {
+            map.openInfoWindow(infoWindow, marker.getPosition());
+          });
+        });
+      }
+
+      // 添加噪音数据点标记
+      // 添加海曙区居民区标记点
+      addMarker(haishuResidentialData, "red", "居民区");
+      // 添加江北区居民区标记点
+      addMarker(jiangbeiResidentialData, "green", "居民区");
+      // 添加鄞州区居民区标记点
+      addMarker(yinzhouResidentialData, "blue", "居民区");
+      // 添加镇海区居民区标记点
+      addMarker(zhenhaiResidentialData, "purple", "居民区");
+
+      // 添加海曙区工业区标记点
+      addMarker(haishuIndustrialData, "orange", "工业区");
+      // 添加江北区工业区标记点
+      addMarker(jiangbeiIndustrialData, "yellow", "工业区");
+      // 添加鄞州区工业区标记点
+      addMarker(yinzhouIndustrialData, "gray", "工业区");
+      // 添加镇海区工业区标记点
+      addMarker(zhenhaiIndustrialData, "brown", "工业区");
+
+      addMarker(haishuCommercialData, "pink", "商业区");
+      addMarker(jiangbeiCommercialData, "black", "商业区");
+      addMarker(yinzhouCommercialData, "gold", "商业区");
+      addMarker(zhenhaiCommercialData, "rose red", "商业区");
+function addNoiseCircle(lat, lng, radius, noiseLevel) {
+        var point = new BMap.Point(lng, lat); // 创建中心点
+
+        // 根据噪音级别设置颜色
+        let strokeColor, fillColor;
+        if (noiseLevel > 70) {
+          strokeColor = "#FF0000"; // 红色
+          fillColor = "#FF7F7F"; // 红色填充
+        } else if (noiseLevel > 60) {
+          strokeColor = "#FFA500"; // 橙色
+          fillColor = "#FFD700"; // 橙色填充
+        } else {
+          strokeColor = "#00FF00"; // 绿色
+          fillColor = "#7FFF7F"; // 绿色填充
+        }
+
+        // 创建圆圈
+        var circle = new BMap.Circle(point, radius, {
+          strokeColor: strokeColor, // 边框颜色
+          strokeWeight: 3, // 边框宽度
+          fillColor: fillColor, // 填充颜色
+          fillOpacity: 0.4, // 填充透明度
+        });
+
+        // 将圆圈添加到地图上
+        map.addOverlay(circle);
+
+        // 创建信息窗口
+        var infoWindow = new BMap.InfoWindow(`噪音级别：${noiseLevel} dB`);
+
+        // 绑定点击事件，显示信息窗口
+        circle.addEventListener("click", function () {
+          map.openInfoWindow(infoWindow, point);
+        });
+      }
+
+      // 调整视图以包含所有点
+      map.setViewport([new BMap.Point(121.537598, 29.8842112), new BMap.Point(121.568515, 29.888822)]);
+
+      // 添加噪音圆圈
+      addNoiseCircle(29.8842112, 121.537598, 500, 75); // 在后河小区位置添加一个半径为1000米的圆圈
+      addNoiseCircle(29.888822, 121.568515, 700, 80); // 添加第二个圆圈
+      addNoiseCircle(29.875832, 121.560475, 1200, 85);
+      addNoiseCircle(29.982676, 121.588109, 500, 90);
+      addNoiseCircle(30.059286, 121.622778, 5000, 92);
+      addNoiseCircle(29.871167, 121.603348, 800, 90);
+      addNoiseCircle(29.866002, 121.630925, 800, 45);
+      addNoiseCircle(29.929439, 121.630873, 800, 62);
+      addNoiseCircle(29.907696, 121.604847, 2800, 61);
+      addNoiseCircle(29.891805, 121.634143, 750, 47);
+      addNoiseCircle(29.885853, 121.597413, 750, 74);
+      addNoiseCircle(29.921925, 121.537064, 500, 72);
+      addNoiseCircle(29.904752, 121.559962, 300, 60);
+      addNoiseCircle(29.952886, 121.478096, 3000, 80);
+      addNoiseCircle(30.073483, 121.517816, 4000, 61);
+      addNoiseCircle(29.955077, 121.606668, 400, 90);
+      addNoiseCircle(29.825802, 121.486057, 4000, 72);
+      addNoiseCircle(29.766432, 121.681681, 5000,48 );
+      addNoiseCircle(29.838304, 121.602308, 2000, 68);
+      addNoiseCircle(29.954578, 121.726019, 4000, 66);
+      addNoiseCircle(29.804092, 121.552631, 2000, 72);
+
+
+
+    </script>
+  </body>
+</html>
