@@ -1,0 +1,47 @@
+Linked List (链表)
+C++ : std::list
+Java : LinkedList
+Form , Sheet 表
+List ,queue 队列
+head ........tail     null
+telecommiting, parking lot (见缝插针)
+not coufiguous memory location
+Scattered
+vector : resigable array : contiguous memory consective
+priciple of space locality
+cache (cash , 缓存)
+To speed up procesing , build a cache
+Defragmentation 碎片化
+adventages : never relocation when growing except for cache
+struct name 
+{ T data ; Name * next ; }
+auto p = new ListName() ;         (heap 堆)
+auto i = 40 ;
+p ------- data = t ;
+p ------- next = null ptr ;
+null : undetermined (未定的) 
+delete p ;   
+node (节点)
+class AList
+{
+      Node * head ;
+      append
+      msert (data , anchor锚)
+      delete();
+}  
+ 增删改查数
+Singlylinked List 
+DoulyLinked List
+O(1)-------constant time 
+For singlylist , the time couplexity for insert before operation in O(N) ------- linear time
+For doubly linked list , the time complexity for insert operation in O(1)
+std :: list  in a doublylined list ;
+Linear structure is used as a buffer.
+array fixed
+recton dynamic
+List very dyramic  (resign frequently)
+Stack & queue are special LinkedList
+sometimes Stack in mode by rector
+but in java;Queue<>q=new LinkedList();
+std :: list
+java.ulit.LinkedList
